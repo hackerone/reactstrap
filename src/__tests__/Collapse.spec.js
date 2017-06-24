@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import Collapse from '../Collapse';
+import { Collapse } from '../';
 
 describe('Collapse', () => {
   let isOpen;
@@ -18,6 +18,43 @@ describe('Collapse', () => {
     jasmine.clock().uninstall();
   });
 
+  describe('delay', () => {
+    it('should accept a number', () => {
+      const wrapper = mount(<Collapse isOpen={isOpen} delay={200} />);
+      toggle();
+      wrapper.setProps({ isOpen: isOpen });
+      jasmine.clock().tick(200);
+      expect(wrapper.state('collapse')).toEqual('SHOWN');
+      wrapper.unmount();
+    });
+
+    it('should accept an object', () => {
+      const wrapper = mount(<Collapse isOpen={isOpen} delay={{ show: 110, hide: 120 }} />);
+      toggle();
+      wrapper.setProps({ isOpen: isOpen });
+      jasmine.clock().tick(110);
+      expect(wrapper.state('collapse')).toEqual('SHOWN');
+
+      toggle();
+      wrapper.setProps({ isOpen: isOpen });
+      jasmine.clock().tick(120);
+      expect(wrapper.state('collapse')).toEqual('HIDDEN');
+    });
+
+    it('should use default value if value is missing from object', () => {
+      const wrapper = mount(<Collapse isOpen={isOpen} delay={{ show: 110 }} />);
+      toggle();
+      wrapper.setProps({ isOpen: isOpen });
+      jasmine.clock().tick(110);
+      expect(wrapper.state('collapse')).toEqual('SHOWN');
+
+      toggle();
+      wrapper.setProps({ isOpen: isOpen });
+      jasmine.clock().tick(350);
+      expect(wrapper.state('collapse')).toEqual('HIDDEN');
+    });
+  });
+
   it('should render children', () => {
     const wrapper = shallow(<Collapse><p>hello</p></Collapse>).find('p');
     expect(wrapper.text()).toBe('hello');
@@ -33,9 +70,14 @@ describe('Collapse', () => {
     expect(wrapper.hasClass('collapse')).toEqual(true);
   });
 
-  it('should render with class "in" when isOpen is true', () => {
+  it('should render with class "navbar"', () => {
+    const wrapper = shallow(<Collapse navbar />);
+    expect(wrapper.hasClass('navbar-collapse')).toEqual(true);
+  });
+
+  it('should render with class "show" when isOpen is true', () => {
     const wrapper = shallow(<Collapse isOpen />);
-    expect(wrapper.hasClass('in')).toEqual(true);
+    expect(wrapper.hasClass('show')).toEqual(true);
   });
 
   it('should set height to null when isOpen is true', () => {
@@ -44,9 +86,9 @@ describe('Collapse', () => {
     expect(wrapper.state('height')).toBe(null);
   });
 
-  it('should set height to 0 when isOpen is false', () => {
+  it('should not set height when isOpen is false', () => {
     const wrapper = shallow(<Collapse isOpen={isOpen} />);
-    expect(wrapper.state('height')).toBe(0);
+    expect(wrapper.state('height')).toBe(null);
   });
 
   it('should render with class "collapse" with default collapse state', () => {
@@ -117,5 +159,46 @@ describe('Collapse', () => {
     const wrapper = mount(<Collapse isOpen={isOpen} />);
     wrapper.unmount();
     expect(Collapse.prototype.componentWillUnmount).toHaveBeenCalled();
+  });
+
+  it('should call onOpened after opening', () => {
+    const onOpened = jasmine.createSpy('onOpenedSpy');
+    const onClosed = jasmine.createSpy('onClosedSpy');
+    const wrapper = mount(<Collapse isOpen={isOpen} onOpened={onOpened} onClosed={onClosed} />);
+
+    jasmine.clock().tick(300);
+    expect(isOpen).toBe(false);
+    expect(onOpened).not.toHaveBeenCalled();
+    expect(onClosed).not.toHaveBeenCalled();
+
+    toggle();
+    wrapper.setProps({ isOpen });
+    jasmine.clock().tick(380);
+    expect(isOpen).toBe(true);
+    expect(onOpened).toHaveBeenCalled();
+    expect(onClosed).not.toHaveBeenCalled();
+
+    wrapper.unmount();
+  });
+
+  it('should call onClosed after closing', () => {
+    const onOpened = jasmine.createSpy('onOpenedSpy');
+    const onClosed = jasmine.createSpy('onClosedSpy');
+    toggle();
+    const wrapper = mount(<Collapse isOpen={isOpen} onOpened={onOpened} onClosed={onClosed} />);
+
+    jasmine.clock().tick(380);
+    expect(isOpen).toBe(true);
+    expect(onOpened).not.toHaveBeenCalled();
+    expect(onClosed).not.toHaveBeenCalled();
+
+    toggle();
+    wrapper.setProps({ isOpen });
+    jasmine.clock().tick(380);
+    expect(isOpen).toBe(false);
+    expect(onOpened).not.toHaveBeenCalled();
+    expect(onClosed).toHaveBeenCalled();
+
+    wrapper.unmount();
   });
 });

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { mapToCssModules } from './utils';
 
@@ -32,7 +33,7 @@ const Media = (props) => {
     right,
     tag,
     top,
-    ...attributes,
+    ...attributes
   } = props;
 
   let defaultTag;

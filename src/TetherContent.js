@@ -1,11 +1,12 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import isFunction from 'lodash.isfunction';
-import Tether from 'tether';
-import { mapToCssModules } from './utils';
+import Tether from 'reactstrap-tether';
 
 const propTypes = {
   children: PropTypes.node.isRequired,
+  className: PropTypes.string,
   arrow: PropTypes.string,
   disabled: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
@@ -101,15 +102,9 @@ class TetherContent extends React.Component {
     document.addEventListener('click', this.handleDocumentClick, true);
 
     this._element = document.createElement('div');
+    this._element.className = this.props.className;
     document.body.appendChild(this._element);
     this.renderIntoSubtree();
-
-    if (this.props.arrow) {
-      const arrow = document.createElement('div');
-      arrow.className = mapToCssModules(this.props.arrow + '-arrow', this.props.cssModule);
-      this._element.appendChild(arrow);
-    }
-
     this._tether = new Tether(this.getTetherConfig());
     this.props.tetherRef(this._tether);
     this._tether.position();
@@ -136,9 +131,7 @@ class TetherContent extends React.Component {
     const { children, style } = this.props;
     return React.cloneElement(
       children,
-      {
-        style: { position: 'relative', ...style }
-      }
+      { style }
     );
   }
 

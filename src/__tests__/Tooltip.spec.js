@@ -47,6 +47,7 @@ describe('Tooltip', () => {
     const tooltips = document.getElementsByClassName('tooltip');
 
     expect(ReactDOM.findDOMNode(instance)).toBe(null);
+    expect(document.body.querySelectorAll('.tooltip.show').length).toBe(0);
     expect(target.className).toBe('');
     expect(tooltips.length).toBe(0);
     wrapper.detach();
@@ -64,6 +65,26 @@ describe('Tooltip', () => {
     const tooltips = document.getElementsByClassName('tooltip');
 
     expect(ReactDOM.findDOMNode(instance)).toBe(null);
+    expect(document.body.querySelectorAll('.tooltip.show').length).toBe(1);
+    expect(target.className.indexOf('bs-tether-target') > -1).toBe(true);
+    expect(tooltips.length).toBe(1);
+    expect(tooltips[0].textContent).toBe('Tooltip Content');
+    wrapper.detach();
+  });
+
+  it('should render with target object', () => {
+    isOpen = true;
+    const wrapper = mount(
+      <Tooltip target={document.getElementById('target')} isOpen={isOpen} toggle={toggle}>
+        Tooltip Content
+      </Tooltip>,
+      { attachTo: container }
+    );
+    const instance = wrapper.instance();
+    const tooltips = document.getElementsByClassName('tooltip');
+
+    expect(ReactDOM.findDOMNode(instance)).toBe(null);
+    expect(document.body.querySelectorAll('.tooltip.show').length).toBe(1);
     expect(target.className.indexOf('bs-tether-target') > -1).toBe(true);
     expect(tooltips.length).toBe(1);
     expect(tooltips[0].textContent).toBe('Tooltip Content');

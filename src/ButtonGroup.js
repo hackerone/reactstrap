@@ -1,8 +1,10 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { mapToCssModules } from './utils';
 
 const propTypes = {
+  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   'aria-label': PropTypes.string,
   className: PropTypes.string,
   cssModule: PropTypes.object,
@@ -12,7 +14,8 @@ const propTypes = {
 };
 
 const defaultProps = {
-  role: 'group'
+  tag: 'div',
+  role: 'group',
 };
 
 const ButtonGroup = (props) => {
@@ -21,6 +24,7 @@ const ButtonGroup = (props) => {
     cssModule,
     size,
     vertical,
+    tag: Tag,
     ...attributes
   } = props;
 
@@ -31,7 +35,7 @@ const ButtonGroup = (props) => {
   ), cssModule);
 
   return (
-    <div {...attributes} className={classes} />
+    <Tag {...attributes} className={classes} />
   );
 };
 

@@ -19,7 +19,7 @@ import DropdownItem from './DropdownItem';
 import DropdownMenu from './DropdownMenu';
 import DropdownToggle from './DropdownToggle';
 import Fade from './Fade';
-import Tag from './Tag';
+import Badge from './Badge';
 import Card from './Card';
 import CardGroup from './CardGroup';
 import CardDeck from './CardDeck';
@@ -66,6 +66,13 @@ import Collapse from './Collapse';
 import ListGroupItem from './ListGroupItem';
 import ListGroupItemHeading from './ListGroupItemHeading';
 import ListGroupItemText from './ListGroupItemText';
+import {
+  UncontrolledAlert,
+  UncontrolledButtonDropdown,
+  UncontrolledDropdown,
+  UncontrolledNavDropdown,
+  UncontrolledTooltip,
+} from './Uncontrolled';
 
 export {
   Alert,
@@ -90,7 +97,7 @@ export {
   DropdownMenu,
   DropdownToggle,
   Fade,
-  Tag,
+  Badge,
   Card,
   CardLink,
   CardGroup,
@@ -136,4 +143,9 @@ export {
   ListGroupItem,
   ListGroupItemText,
   ListGroupItemHeading,
+  UncontrolledAlert,
+  UncontrolledButtonDropdown,
+  UncontrolledDropdown,
+  UncontrolledNavDropdown,
+  UncontrolledTooltip,
 };

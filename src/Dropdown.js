@@ -1,7 +1,8 @@
 /* eslint react/no-find-dom-node: 0 */
 // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-find-dom-node.md
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import omit from 'lodash.omit';
@@ -35,7 +36,7 @@ const childContextTypes = {
 
 const defaultTetherConfig = {
   classPrefix: 'bs-tether',
-  classes: { element: 'dropdown', enabled: 'open' },
+  classes: { element: 'dropdown', enabled: 'show' },
   constraints: [
     { to: 'scrollParent', attachment: 'together none' },
     { to: 'window', attachment: 'together none' }
@@ -178,7 +179,7 @@ class Dropdown extends React.Component {
         'btn-group': group,
         [`btn-group-${size}`]: !!size,
         dropdown: !group,
-        open: isOpen,
+        show: isOpen,
         dropup: dropup
       }
     ), cssModule);

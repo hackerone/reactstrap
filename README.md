@@ -4,22 +4,46 @@
 
 # reactstrap
 
-Easy to use React Bootstrap 4 components compatible with React 0.14.x and 15.x.
+Stateless React Components for Bootstrap 4.
 
+## Getting Started
 
-## Installation
+Follow the [create-react-app instructions](https://github.com/facebookincubator/create-react-app#getting-started) up to the `Adding Bootstrap` section and instead follow the reactstrap version of [adding bootstrap](#adding-bootstrap).
 
-Install `reactstrap` and __peer dependencies__ via NPM
+### tl;dr
 
-```sh
-npm install --save reactstrap react-addons-transition-group react-addons-css-transition-group react react-dom
+```
+npm install -g create-react-app
+
+create-react-app my-app
+cd my-app/
+npm start
 ```
 
-Import the components you need, example:
+Then open [http://localhost:3000/](http://localhost:3000/) to see your app. The initial structure of your app is setup. Next, let's [add reactstrap and bootstrap](#adding-bootstrap).
+
+### Adding Bootstrap
+
+Install reactstrap and Bootstrap from NPM. Reactstrap does not include Bootstrap CSS so this needs to be installed as well:
+
+```
+npm install bootstrap@4.0.0-alpha.6 --save
+npm install --save reactstrap react-transition-group react react-dom
+```
+
+Import Bootstrap CSS in the ```src/index.js``` file:
 
 ```js
-import { Button, Popover, Tooltip } from 'reactstrap';
+import 'bootstrap/dist/css/bootstrap.css';
 ```
+
+Import required reactstrap components within ```src/App.js``` file or your custom component files:
+
+```js
+import { Button } from 'reactstrap';
+```
+
+Now you are ready to use the imported reactstrap components within your component hierarchy defined in the render method. Here is an example [`App.js`](https://gist.github.com/eddywashere/e13033c0e655ab7cda995f8bc77ce40d) redone using reactstrap.
 
 ## About the Project
 
@@ -100,6 +124,8 @@ Organizations and projects using `reactstrap`
 
 - [availity-reactstrap-validation](https://availity.github.io/availity-reactstrap-validation/)
 - [component-template](https://reactstrap.github.io/component-template/)
+- [video-react](https://video-react.github.io/)
+- [CoreUI-Free-Bootstrap-Admin-Template](https://github.com/mrholek/CoreUI-Free-Bootstrap-Admin-Template) - [demo](http://coreui.io/demo/React_Demo/#/)
 
 Submit a PR to add to this list!
 

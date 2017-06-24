@@ -1,17 +1,21 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import omit from 'lodash.omit';
 import TetherContent from './TetherContent';
 import { getTetherAttachments, tetherAttachements, mapToCssModules } from './utils';
 
 const propTypes = {
-  placement: React.PropTypes.oneOf(tetherAttachements),
-  target: PropTypes.string.isRequired,
+  placement: PropTypes.oneOf(tetherAttachements),
+  target: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ]).isRequired,
   isOpen: PropTypes.bool,
   disabled: PropTypes.bool,
   tether: PropTypes.object,
   tetherRef: PropTypes.func,
-  classNames: PropTypes.any,
+  className: PropTypes.string,
   cssModule: PropTypes.object,
   toggle: PropTypes.func,
   autohide: PropTypes.bool,
@@ -36,7 +40,10 @@ const defaultProps = {
 
 const defaultTetherConfig = {
   classPrefix: 'bs-tether',
-  classes: { element: 'tooltip in', enabled: 'open' },
+  classes: {
+    element: false,
+    enabled: 'show',
+  },
   constraints: [
     { to: 'scrollParent', attachment: 'together none' },
     { to: 'window', attachment: 'together none' }
@@ -48,6 +55,7 @@ class Tooltip extends React.Component {
     super(props);
 
     this.addTargetEvents = this.addTargetEvents.bind(this);
+    this.getTarget = this.getTarget.bind(this);
     this.getTetherConfig = this.getTetherConfig.bind(this);
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.removeTargetEvents = this.removeTargetEvents.bind(this);
@@ -61,7 +69,7 @@ class Tooltip extends React.Component {
   }
 
   componentDidMount() {
-    this._target = document.getElementById(this.props.target);
+    this._target = this.getTarget();
     this.addTargetEvents();
   }
 
@@ -110,12 +118,20 @@ class Tooltip extends React.Component {
     return delay;
   }
 
+  getTarget() {
+    const { target } = this.props;
+    if (typeof target === 'object') {
+      return target;
+    }
+    return document.getElementById(target);
+  }
+
   getTetherConfig() {
     const attachments = getTetherAttachments(this.props.placement);
     return {
       ...defaultTetherConfig,
       ...attachments,
-      target: '#' + this.props.target,
+      target: this.getTarget,
       ...this.props.tether
     };
   }
@@ -184,14 +200,14 @@ class Tooltip extends React.Component {
     const attributes = omit(this.props, Object.keys(propTypes));
     const classes = mapToCssModules(classNames(
       'tooltip-inner',
-      this.props.classNames
+      this.props.className
     ), this.props.cssModule);
 
     let tetherConfig = this.getTetherConfig();
 
     return (
       <TetherContent
-        arrow="tooltip"
+        className="tooltip"
         tether={tetherConfig}
         tetherRef={this.props.tetherRef}
         isOpen={this.props.isOpen}

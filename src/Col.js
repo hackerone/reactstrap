@@ -1,8 +1,10 @@
-import React, { PropTypes } from 'react';
+import isobject from 'lodash.isobject';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { mapToCssModules } from './utils';
 
-const colSizes = ['xs', 'sm', 'md', 'lg', 'xl'];
+const colWidths = ['xs', 'sm', 'md', 'lg', 'xl'];
 const stringOrNumberProp = PropTypes.oneOfType([PropTypes.number, PropTypes.string]);
 
 const columnProps = PropTypes.oneOfType([
@@ -10,7 +12,7 @@ const columnProps = PropTypes.oneOfType([
   PropTypes.number,
   PropTypes.string,
   PropTypes.shape({
-    size: stringOrNumberProp,
+    size: PropTypes.oneOfType([PropTypes.bool, PropTypes.number, PropTypes.string]),
     push: stringOrNumberProp,
     pull: stringOrNumberProp,
     offset: stringOrNumberProp
@@ -18,6 +20,7 @@ const columnProps = PropTypes.oneOfType([
 ]);
 
 const propTypes = {
+  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   xs: columnProps,
   sm: columnProps,
   md: columnProps,
@@ -25,47 +28,62 @@ const propTypes = {
   xl: columnProps,
   className: PropTypes.string,
   cssModule: PropTypes.object,
+  widths: PropTypes.array,
 };
 
 const defaultProps = {
-  xs: 12
+  tag: 'div',
+  widths: colWidths,
+};
+
+const getColumnSizeClass = (isXs, colWidth, colSize) => {
+  if (colSize === true || colSize === '') {
+    return isXs ? 'col' : `col-${colWidth}`;
+  } else if (colSize === 'auto') {
+    return isXs ? 'col-auto' : `col-${colWidth}-auto`;
+  }
+
+  return isXs ? `col-${colSize}` : `col-${colWidth}-${colSize}`;
 };
 
 const Col = (props) => {
   const {
     className,
     cssModule,
+    widths,
+    tag: Tag,
     ...attributes
   } = props;
   const colClasses = [];
 
-  colSizes.forEach(colSize => {
-    const columnProp = props[colSize];
-    delete attributes[colSize];
-    let colClass;
+  widths.forEach((colWidth, i) => {
+    let columnProp = props[colWidth];
+
+    if (!i && columnProp === undefined) {
+      columnProp = true;
+    }
+
+    delete attributes[colWidth];
 
     if (!columnProp) {
       return;
-    } else if (columnProp.size) {
-      if (columnProp.size === 'auto') {
-        colClass = `col-${colSize}`;
-      } else {
-        colClass = `col-${colSize}-${columnProp.size}`;
-      }
+    }
+
+    const isXs = !i;
+    let colClass;
+
+    if (isobject(columnProp)) {
+      const colSizeInterfix = isXs ? '-' : `-${colWidth}-`;
+      colClass = getColumnSizeClass(isXs, colWidth, columnProp.size);
 
       colClasses.push(mapToCssModules(classNames({
-        [colClass]: columnProp.size,
-        [`push-${colSize}-${columnProp.push}`]: columnProp.push,
-        [`pull-${colSize}-${columnProp.pull}`]: columnProp.pull,
-        [`offset-${colSize}-${columnProp.offset}`]: columnProp.offset
+        [colClass]: columnProp.size || columnProp.size === '',
+        [`push${colSizeInterfix}${columnProp.push}`]: columnProp.push || columnProp.push === 0,
+        [`pull${colSizeInterfix}${columnProp.pull}`]: columnProp.pull || columnProp.pull === 0,
+        [`offset${colSizeInterfix}${columnProp.offset}`]: columnProp.offset || columnProp.offset === 0
       })), cssModule);
     } else {
-      if (columnProp === 'auto' || columnProp === true) {
-        colClass = `col-${colSize}`;
-      } else {
-        colClass = `col-${colSize}-${columnProp}`;
-      }
-
+      colClass = getColumnSizeClass(isXs, colWidth, columnProp);
       colClasses.push(colClass);
     }
   });
@@ -76,7 +94,7 @@ const Col = (props) => {
   ), cssModule);
 
   return (
-    <div {...attributes} className={classes} />
+    <Tag {...attributes} className={classes} />
   );
 };
 

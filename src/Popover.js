@@ -1,11 +1,12 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import omit from 'lodash.omit';
 import TetherContent from './TetherContent';
 import { getTetherAttachments, mapToCssModules, tetherAttachements } from './utils';
 
 const propTypes = {
-  placement: React.PropTypes.oneOf(tetherAttachements),
+  placement: PropTypes.oneOf(tetherAttachements),
   target: PropTypes.string.isRequired,
   isOpen: PropTypes.bool,
   tether: PropTypes.object,
@@ -23,7 +24,10 @@ const defaultProps = {
 
 const defaultTetherConfig = {
   classPrefix: 'bs-tether',
-  classes: { element: 'popover', enabled: 'open' },
+  classes: {
+    element: false,
+    enabled: 'show',
+  },
   constraints: [
     { to: 'scrollParent', attachment: 'together none' },
     { to: 'window', attachment: 'together none' }
@@ -63,7 +67,7 @@ class Popover extends React.Component {
 
     return (
       <TetherContent
-        arrow="popover"
+        className={mapToCssModules('popover', this.props.cssModule)}
         tether={tetherConfig}
         tetherRef={this.props.tetherRef}
         isOpen={this.props.isOpen}

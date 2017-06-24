@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { mapToCssModules } from './utils';
 
@@ -17,29 +18,29 @@ const defaultProps = {
   tag: 'span'
 };
 
-const Tag = (props) => {
+const Badge = (props) => {
   const {
     className,
     cssModule,
     color,
     pill,
-    tag: Component,
+    tag: Tag,
     ...attributes
   } = props;
 
   const classes = mapToCssModules(classNames(
     className,
-    'tag',
-    'tag-' + color,
-    pill ? 'tag-pill' : false
+    'badge',
+    'badge-' + color,
+    pill ? 'badge-pill' : false
   ), cssModule);
 
   return (
-    <Component {...attributes} className={classes} />
+    <Tag {...attributes} className={classes} />
   );
 };
 
-Tag.propTypes = propTypes;
-Tag.defaultProps = defaultProps;
+Badge.propTypes = propTypes;
+Badge.defaultProps = defaultProps;
 
-export default Tag;
+export default Badge;

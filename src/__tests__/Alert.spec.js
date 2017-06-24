@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Alert from '../Alert';
+import { Alert } from '../';
 
 describe('Alert', () => {
   it('should render children', () => {
@@ -12,9 +12,9 @@ describe('Alert', () => {
     const alert = shallow(<Alert>Yo!</Alert>);
     expect(alert.prop('transitionName')).toEqual({
       appear: 'fade',
-      appearActive: 'in',
+      appearActive: 'show',
       enter: 'fade',
-      enterActive: 'in',
+      enterActive: 'show',
       leave: 'fade',
       leaveActive: 'out'
     });

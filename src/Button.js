@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { mapToCssModules } from './utils';
 
@@ -68,7 +69,13 @@ class Button extends React.Component {
     }
 
     return (
-      <Tag {...attributes} className={classes} ref={getRef} onClick={this.onClick} />
+      <Tag
+        type={(Tag === 'button' && attributes.onClick) ? 'button' : undefined}
+        {...attributes}
+        className={classes}
+        ref={getRef}
+        onClick={this.onClick}
+      />
     );
   }
 }

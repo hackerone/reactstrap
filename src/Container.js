@@ -1,20 +1,25 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { mapToCssModules } from './utils';
 
 const propTypes = {
+  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   fluid: PropTypes.bool,
   className: PropTypes.string,
   cssModule: PropTypes.object,
 };
 
-const defaultProps = {};
+const defaultProps = {
+  tag: 'div',
+};
 
 const Container = (props) => {
   const {
     className,
     cssModule,
     fluid,
+    tag: Tag,
     ...attributes
   } = props;
 
@@ -24,7 +29,7 @@ const Container = (props) => {
   ), cssModule);
 
   return (
-    <div {...attributes} className={classes} />
+    <Tag {...attributes} className={classes} />
   );
 };
 

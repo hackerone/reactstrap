@@ -1,15 +1,21 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { mapToCssModules } from './utils';
 
 const propTypes = {
+  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  wrapTag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   toggle: PropTypes.func,
   className: PropTypes.string,
   cssModule: PropTypes.object,
   children: PropTypes.node,
 };
 
-const defaultProps = {};
+const defaultProps = {
+  tag: 'h4',
+  wrapTag: 'div',
+};
 
 const ModalHeader = (props) => {
   let closeButton;
@@ -18,6 +24,8 @@ const ModalHeader = (props) => {
     cssModule,
     children,
     toggle,
+    tag: Tag,
+    wrapTag: WrapTag,
     ...attributes } = props;
 
   const classes = mapToCssModules(classNames(
@@ -34,12 +42,12 @@ const ModalHeader = (props) => {
   }
 
   return (
-    <div {...attributes} className={classes}>
-      {closeButton}
-      <h4 className="modal-title">
+    <WrapTag {...attributes} className={classes}>
+      <Tag className={mapToCssModules('modal-title', cssModule)}>
         {children}
-      </h4>
-    </div>
+      </Tag>
+      {closeButton}
+    </WrapTag>
   );
 };
 

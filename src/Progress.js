@@ -1,9 +1,13 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import toNumber from 'lodash.tonumber';
 import { mapToCssModules } from './utils';
 
 const propTypes = {
+  children: PropTypes.node,
+  bar: PropTypes.bool,
+  multi: PropTypes.bool,
   tag: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.string,
@@ -17,69 +21,66 @@ const propTypes = {
   striped: PropTypes.bool,
   color: PropTypes.string,
   className: PropTypes.string,
+  barClassName: PropTypes.string,
   cssModule: PropTypes.object,
 };
 
 const defaultProps = {
-  tag: 'progress',
+  tag: 'div',
   value: 0,
   max: 100,
 };
 
 const Progress = (props) => {
   const {
+    children,
     className,
+    barClassName,
     cssModule,
     value,
     max,
     animated,
     striped,
     color,
+    bar,
+    multi,
     tag: Tag,
     ...attributes
   } = props;
 
   const percent = ((toNumber(value) / toNumber(max)) * 100);
 
-  const nonProgressClasses = mapToCssModules(classNames(
-    className,
-    'progress',
-    animated ? 'progress-animated' : null
-  ), cssModule);
-
   const progressClasses = mapToCssModules(classNames(
-    nonProgressClasses,
-    color ? `progress-${color}` : null,
-    striped || animated ? 'progress-striped' : null
+    className,
+    'progress'
   ), cssModule);
 
-  const fallbackClasses = mapToCssModules(classNames(
+  const progressBarClasses = mapToCssModules(classNames(
     'progress-bar',
-    color ? `progress-${color}` : null,
+    bar ? className || barClassName : barClassName,
+    animated ? 'progress-bar-animated' : null,
+    color ? `bg-${color}` : null,
     striped || animated ? 'progress-bar-striped' : null
   ), cssModule);
 
-  const fallbackFill = (
-    <span
-      className={fallbackClasses}
+  const ProgressBar = multi ? children : (
+    <div
+      className={progressBarClasses}
       style={{ width: `${percent}%` }}
       role="progressbar"
       aria-valuenow={value}
       aria-valuemin="0"
       aria-valuemax={max}
+      children={children}
     />
   );
 
-  if (Tag === 'progress') {
-    return (
-      <Tag {...attributes} className={progressClasses} value={value} max={max}>
-        <div className={nonProgressClasses} children={fallbackFill} />
-      </Tag>
-    );
+  if (bar) {
+    return ProgressBar;
   }
 
   return (
-    <Tag {...attributes} className={nonProgressClasses} children={fallbackFill} />
+    <Tag {...attributes} className={progressClasses} children={ProgressBar} />
   );
 };
 
